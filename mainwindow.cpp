@@ -10,6 +10,8 @@
 #include "QTextCursor"
 #include "QFile"
 #include "QMessageBox"
+#include "QBitmap"
+#include "QPainter"
 using namespace std;
 
 //bool running = true;
@@ -40,6 +42,19 @@ ui->toolButton_3->setStyleSheet("background: rgb(78,78,78); border-top-left-radi
 ui->toolButton_4->setStyleSheet("background: rgb(78,78,78); border-top-left-radius: 10px;border-bottom-right-radius:10px;color:white;");
 
 
+/*QBitmap bmp(this->size());
+
+    bmp.fill();
+
+    QPainter p(&bmp);
+
+    p.setPen(Qt::NoPen);
+
+    p.setBrush(Qt::black);
+
+    p.drawRoundedRect(bmp.rect(),20,20);
+
+    setMask(bmp);*/
 
     //Testing Area
     /*QByteArray line;
