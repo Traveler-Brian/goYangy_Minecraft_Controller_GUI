@@ -31,6 +31,8 @@ private:
     QFutureWatcher<void> watcher1;
     QFutureWatcher<void> watcher2;
 
+    QString lastCommand = "";
+
     bool running = false;
 
     void getLog();
@@ -52,5 +54,7 @@ private slots:
     void on_toolButton_2_clicked();
     void on_toolButton_3_clicked();
     void on_pushButton_clicked();
+protected:
+    virtual void keyPressEvent(QKeyEvent *ev);
 };
 #endif // MAINWINDOW_H

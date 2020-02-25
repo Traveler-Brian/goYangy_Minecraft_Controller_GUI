@@ -12,6 +12,7 @@
 #include "QMessageBox"
 #include "QBitmap"
 #include "QPainter"
+#include "QKeyEvent"
 using namespace std;
 
 //bool running = true;
@@ -85,6 +86,7 @@ qDebug() << "App path : " << qApp->applicationDirPath();
 
      serverId = line;
      //Testing Area
+     //this->grabKeyboard();
         setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowTitleHint);
     //ui->menubar->addAction("Exit (&E)",this,SLOT(ExitClicked()));
     //connect(ui->actionExit_Application, SIGNAL(triggered()), this, SLOT(ExitClicked()));
@@ -98,6 +100,7 @@ qDebug() << "App path : " << qApp->applicationDirPath();
     connect(this, &MainWindow::setValue, ui->textBrowser->verticalScrollBar(), &QScrollBar::setValue);
     connect(this, &MainWindow::getValue, ui->textBrowser->verticalScrollBar(), &QScrollBar::maximum);
     connect(ui->lineEdit, SIGNAL(returnPressed()),ui->pushButton,SIGNAL(clicked()));
+    //connect(ui->lineEdit, SIGNAL(upPressed()),ui->pushButton,SIGNAL(clicked()));
     //connect(this, &MainWindow::TestSignal2, ui->textBrowser, &QTextBrowser::moveCursor);
     //running = true;
 
@@ -382,6 +385,7 @@ abortButton->setStyleSheet("background: rgb(73,73,73);color:white;");
 void MainWindow::on_pushButton_clicked()
 {
     qDebug() << ui->lineEdit->text();
+    lastCommand = ui->lineEdit->text();
     QNetworkAccessManager *manager = new QNetworkAccessManager();
     QString url = "https://minerooms.com/console/"+serverId;
     QNetworkRequest request;
@@ -414,3 +418,15 @@ void MainWindow::on_pushButton_clicked()
     qDebug() << bytes;
     ui->lineEdit->setText("");
 }
+
+void MainWindow::keyPressEvent(QKeyEvent *ev)
+{
+    if(ev->key() == Qt::Key_Up)
+    {
+       cout<<"Pressed Up Key!"<<endl;
+        ui->lineEdit->setText(lastCommand);
+    }
+
+    QWidget::keyPressEvent(ev);
+}
+
