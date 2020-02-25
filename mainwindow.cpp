@@ -113,7 +113,7 @@ qDebug() << "App path : " << qApp->applicationDirPath();
             ui->toolButton_2->setEnabled(false);
             ui->toolButton_3->setEnabled(false);
             ui->toolButton_4->setEnabled(false);
-            QFile file("Verify.harum");
+            QFile file(qApp->applicationDirPath()+"/Verify.harum");
                 if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
                     return;
 
