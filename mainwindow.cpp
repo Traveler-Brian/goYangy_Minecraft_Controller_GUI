@@ -52,17 +52,17 @@ ui->toolButton_4->setStyleSheet("background: rgb(78,78,78); border-top-left-radi
            //qDebug()<<(line);
        }*/
 
-
-       if(QFile::exists("Verify.harum"))
+qDebug() << "App path : " << qApp->applicationDirPath();
+       if(QFile::exists(qApp->applicationDirPath()+"/Verify.harum"))
        {
            QByteArray line;
-               QFile file("Verify.harum");
+               QFile file(qApp->applicationDirPath()+"/Verify.harum");
                   if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
                       return;
 
                   while (!file.atEnd()) {
                        line = file.readLine();
-                      //qDebug()<<(line);
+                      qDebug()<<(line);
                   }
 
                   if((QString)line.constData() != "" && (QString)line.constData()!="\n")
