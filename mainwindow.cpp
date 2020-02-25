@@ -1,3 +1,4 @@
+//Version Beta 1.1
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "QTConcurrent"
