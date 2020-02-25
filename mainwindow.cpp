@@ -183,6 +183,7 @@ void MainWindow::getLog()
         weborigin.replace("&#39;","'");
         weborigin.replace("&lt;","<");
         weborigin.replace("&gt;",">");
+        weborigin.replace("&quot;","\"");
 
         string webpage = weborigin.toUtf8().constData();
 

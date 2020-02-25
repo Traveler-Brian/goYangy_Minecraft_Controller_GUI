@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>goYangy Minecraft Controller GUI [Beta 1.1]</string>
+   <string>goYangy Minecraft Controller GUI [Beta 1.2]</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QTextBrowser" name="textBrowser">
