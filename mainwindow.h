@@ -35,6 +35,7 @@ private:
 
     void getLog();
     void Finished();
+    QString serverId = "";
     //void ExitClicked();
 signals:
     void TestSignal1(QString);
