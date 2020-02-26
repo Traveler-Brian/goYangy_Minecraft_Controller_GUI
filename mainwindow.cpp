@@ -13,9 +13,11 @@
 #include "QBitmap"
 #include "QPainter"
 #include "QKeyEvent"
+#include "dtl/dtl.hpp"
 using namespace std;
 
 //bool running = true;
+
 
 void delay(int sec)
 {
@@ -66,10 +68,10 @@ ui->checkBox->setStyleSheet("color:white;");
 
        while (!file.atEnd()) {
             line = file.readLine();
-           //qDebug()<<(line);
+           ////qDebug()<<(line);
        }*/
 
-qDebug() << "App path : " << qApp->applicationDirPath();
+//qDebug() << "App path : " << qApp->applicationDirPath();
        if(QFile::exists(qApp->applicationDirPath()+"/Verify.harum"))
        {
            QByteArray line;
@@ -79,7 +81,7 @@ qDebug() << "App path : " << qApp->applicationDirPath();
 
                   while (!file.atEnd()) {
                        line = file.readLine();
-                      qDebug()<<(line);
+                      //qDebug()<<(line);
                   }
 
                   if((QString)line.constData() != "" && (QString)line.constData()!="\n")
@@ -96,10 +98,17 @@ qDebug() << "App path : " << qApp->applicationDirPath();
     running = true;
     connect(ui->textBrowser, SIGNAL(cursorPositionChanged()), this, SLOT(autoScroll()));
 
-    connect(this, &MainWindow::TestSignal1, ui->textBrowser, &QTextBrowser::setText);
+    connect(this, &MainWindow::TestSignal1, ui->textBrowser, &QTextBrowser::append);
 
     connect(this, &MainWindow::setValue, ui->textBrowser->verticalScrollBar(), &QScrollBar::setValue);
+
+    connect(this, &MainWindow::checkBox, ui->checkBox, &QCheckBox::isChecked);
+
+     //connect(this, &MainWindow::checkBox, ui->checkBox, &QCheckBox::isChecked);
+
     connect(this, &MainWindow::getValue, ui->textBrowser->verticalScrollBar(), &QScrollBar::maximum);
+
+    connect(this, &MainWindow::getText, ui->textBrowser, &QTextBrowser::toPlainText);
     connect(ui->lineEdit, SIGNAL(returnPressed()),ui->pushButton,SIGNAL(clicked()));
     //connect(ui->lineEdit, SIGNAL(upPressed()),ui->pushButton,SIGNAL(clicked()));
     //connect(this, &MainWindow::TestSignal2, ui->textBrowser, &QTextBrowser::moveCursor);
@@ -112,6 +121,9 @@ qDebug() << "App path : " << qApp->applicationDirPath();
              future2 = QtConcurrent::run(this,&MainWindow::getLog);
              watcher2.setFuture(future2);
 
+             connect(&watcher4,&QFutureWatcher<void>::finished,this,&MainWindow::FinishedScroller);
+             future4 = QtConcurrent::run(this,&MainWindow::AutoScroller);
+             watcher4.setFuture(future4);
 
 
 
@@ -147,6 +159,18 @@ void MainWindow::ExitClicked()
     cout<<"Exit Clicked!"<<endl;
 }
 
+void MainWindow::FinishedScroller()
+{
+
+}
+void MainWindow::AutoScroller()
+{
+    while(running && checkBox())
+    {
+        setValue(getValue());
+    }
+}
+
 MainWindow::~MainWindow()
 {
     delete ui;
@@ -154,13 +178,14 @@ MainWindow::~MainWindow()
 
 void MainWindow::autoScroll()
 {
-    qDebug() << ui->textBrowser->verticalScrollBar()->value() << ui->textBrowser->verticalScrollBar()->maximum();
+    //qDebug() << ui->textBrowser->verticalScrollBar()->value() << ui->textBrowser->verticalScrollBar()->maximum();
 
     if(ui->checkBox->isChecked()){
     QTextCursor cursor =  ui->textBrowser->textCursor();
         cursor.movePosition(QTextCursor::End);
         ui->textBrowser->setTextCursor(cursor);
-}
+    }
+    ui->textBrowser->verticalScrollBar()->setValue(ui->textBrowser->verticalScrollBar()->maximum()-4);
 }
 
 void MainWindow::getLog()
@@ -216,17 +241,85 @@ void MainWindow::getLog()
         string console = "";
         for(int i=first;i<second;i++)
         {
-            cout<<webpage[i];
+            //cout<<webpage[i];
             console += webpage[i];
         }
 
-        TestSignal1(QString::fromStdString(console));
+        int samePosition = 0;
+        if(consoleText == "")
+        {
+            consoleText = console;
+            TestSignal1(QString::fromStdString(consoleText));
+        }else if(consoleText == console)
+        {
+            //TestSignal1("");
+        }else if(consoleText != console)
+        {
+            bool same=false;
+            for(int i=0;i<consoleText.length();i++)
+            {
+                string text1="",text2="";
+                for(int j=0;j<122;j++)
+                {
+                    text1 += consoleText[i+j];
+                }
+                for(int j=0;j<122;j++)
+                {
+                    text2 += console[j];
+                }
+                if(text1 == text2)
+                {
+                    same=true;
+                    samePosition = i;
+                    break;
+                }
+            }
+            if(same)
+            {
+                string finalOutput ="";
+                for(int i=console.length()-samePosition;i<console.length();i++)
+                {
+                    cout<<console[i];
+                    finalOutput += console[i];
+                }
+                int countlines=0;
+                int countL =0;
+                string endi="";
+                for(int i=0;i<finalOutput.length();i++)
+                {
+                    if(finalOutput[i]=='\n')countL++;
+                }
+                for(int i=0;i<finalOutput.length();i++)
+                {
+                    if(finalOutput[i] == '\n')
+                    {
+                        countlines++;
+                    }
+                    if(countlines == countL-1)
+                    {
+                        endi += finalOutput[i];
+                    }
+                }
+                QString EnDi = QString::fromStdString(endi);
+                EnDi.replace("\n","");
+                TestSignal1(EnDi);
+                consoleText = console;
+            }else{
+                TestSignal1(QString::fromStdString(console));
+                consoleText = console;
+            }
+        }
+
+
+
+
 
         //TestSignal2(QTextCursor::End);
         //ui->textBrowser->moveCursor(QTextCursor::End);
         //setValue(ui->textBrowser->verticalScrollBar()->maximum());
 
         //delay(1);
+
     }
 }
 
@@ -259,7 +352,7 @@ void MainWindow::on_toolButton_clicked()
             eventLoop.exec();
 
             QByteArray bytes = pReply->readAll();
-            qDebug() << bytes;
+            //qDebug() << bytes;
     } else if (msgBox.clickedButton() == abortButton) {
         // abort
     }
@@ -275,7 +368,7 @@ void MainWindow::on_toolButton_clicked()
     eventLoop.exec();
 
     QByteArray bytes = pReply->readAll();
-    qDebug() << bytes;*/
+    //qDebug() << bytes;*/
 }
 
 void MainWindow::on_toolButton_2_triggered(QAction *arg1)
@@ -349,7 +442,7 @@ void MainWindow::on_toolButton_2_clicked()
             eventLoop.exec();
 
             QByteArray bytes = pReply->readAll();
-            qDebug() << bytes;
+            //qDebug() << bytes;
         } else if (msgBox.clickedButton() == abortButton) {
             // abort
         }
@@ -380,7 +473,7 @@ abortButton->setStyleSheet("background: rgb(73,73,73);color:white;");
             eventLoop.exec();
 
             QByteArray bytes = pReply->readAll();
-            qDebug() << bytes;
+            //qDebug() << bytes;
         } else if (msgBox.clickedButton() == abortButton) {
             // abort
         }
@@ -389,7 +482,7 @@ abortButton->setStyleSheet("background: rgb(73,73,73);color:white;");
 
 void MainWindow::on_pushButton_clicked()
 {
-    qDebug() << ui->lineEdit->text();
+    //qDebug() << ui->lineEdit->text();
     lastCommand = ui->lineEdit->text();
     QNetworkAccessManager *manager = new QNetworkAccessManager();
     QString url = "https://minerooms.com/console/"+serverId;
@@ -420,7 +513,7 @@ void MainWindow::on_pushButton_clicked()
     eventLoop.exec();
 
     QByteArray bytes = pReply->readAll();
-    qDebug() << bytes;
+    //qDebug() << bytes;
     ui->lineEdit->setText("");
 }
 
