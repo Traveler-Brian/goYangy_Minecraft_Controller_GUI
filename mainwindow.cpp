@@ -16,7 +16,7 @@
 #include "dtl/dtl.hpp"
 using namespace std;
 
-QString versionString = "goYangy Minecraft Controller GUI [Beta 2.0]";
+QString versionString = "goYangy Minecraft Controller GUI [Beta 2.1]";
 
 //bool running = true;
 
