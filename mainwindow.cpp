@@ -17,7 +17,7 @@
 #include "QGraphicsDropShadowEffect"
 using namespace std;
 
-QString versionString = "goYangy Minecraft Controller GUI [Beta 2.2.1]";
+QString versionString = "goYangy Minecraft Controller GUI [Beta 2.2.2]";
 
 //bool running = true;
 
@@ -100,7 +100,7 @@ ui->checkBox->setStyleSheet("color:white;");
     ui->textBrowser->setText("Connecting To Server...");
     ui->textBrowser->append("Loading Console...");
     running = true;
-    connect(ui->textBrowser, SIGNAL(cursorPositionChanged()), this, SLOT(autoScroll()));
+    //connect(ui->textBrowser, SIGNAL(cursorPositionChanged()), this, SLOT(autoScroll()));
 
     connect(this, &MainWindow::TestSignal1, ui->textBrowser, &QTextBrowser::append);
 
@@ -125,9 +125,9 @@ ui->checkBox->setStyleSheet("color:white;");
              future2 = QtConcurrent::run(this,&MainWindow::getLog);
              watcher2.setFuture(future2);
 
-             connect(&watcher4,&QFutureWatcher<void>::finished,this,&MainWindow::FinishedScroller);
+             /*connect(&watcher4,&QFutureWatcher<void>::finished,this,&MainWindow::FinishedScroller);
              future4 = QtConcurrent::run(this,&MainWindow::AutoScroller);
-             watcher4.setFuture(future4);
+             watcher4.setFuture(future4);*/
 
 
 
