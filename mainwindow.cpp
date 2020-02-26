@@ -93,7 +93,7 @@ ui->checkBox->setStyleSheet("color:white;");
      serverId = line;
      //Testing Area
      //this->grabKeyboard();
-        setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowTitleHint);
+        setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowMinimizeButtonHint);
     //ui->menubar->addAction("Exit (&E)",this,SLOT(ExitClicked()));
     //connect(ui->actionExit_Application, SIGNAL(triggered()), this, SLOT(ExitClicked()));
     //ui->textBrowser->setStyleSheet("background: black; color:white;");
