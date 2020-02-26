@@ -17,7 +17,7 @@
 #include "QGraphicsDropShadowEffect"
 using namespace std;
 
-QString versionString = "goYangy Minecraft Controller GUI [Beta 2.2]";
+QString versionString = "goYangy Minecraft Controller GUI [Beta 2.2.1]";
 
 //bool running = true;
 
