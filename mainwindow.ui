@@ -23,6 +23,12 @@
       <height>391</height>
      </rect>
     </property>
+    <property name="lineWidth">
+     <number>1</number>
+    </property>
+    <property name="cursorWidth">
+     <number>1</number>
+    </property>
    </widget>
    <widget class="QLineEdit" name="lineEdit">
     <property name="geometry">
